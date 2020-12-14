@@ -1,5 +1,7 @@
 package com.chaychan.news.ui.activity;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.animation.Animation;
 
 import com.chaychan.library.BottomBarItem;
@@ -103,6 +105,13 @@ public class MainActivity extends BaseActivity {
                 bottomItem.setIconSelectedResourceId(R.mipmap.tab_home_selected);//更换为原来的图标
 
                 cancelTabLoading(bottomItem);//停止旋转动画
+
+                Log.d("TAG2", "position==3 before");
+                if (position == 3) {
+                    Log.d("TAG2", "position==3 inside");
+                    startActivity(new Intent(MainActivity.this, MyNewsListActivity.class));
+                }
+
             }
         });
     }
