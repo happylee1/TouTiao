@@ -1,5 +1,7 @@
 package com.chaychan.news.presenter;
 
+import android.util.Log;
+
 import com.chaychan.news.model.entity.News;
 import com.chaychan.news.model.entity.NewsData;
 import com.chaychan.news.model.response.NewsResponse;
@@ -30,6 +32,11 @@ public class NewsListPresenter extends BasePresenter<lNewsListView> {
     }
 
 
+    /**
+     * @param channelCode 新闻的渠道号，例如 推荐，视频，热点，社会，娱乐，科技
+     *
+     *getNewsList()该方法用于从今日头条的API上解析一组新闻数据
+     */
     public void getNewsList(String channelCode){
         lastTime = PreUtils.getLong(channelCode,0);//读取对应频道下最后一次刷新的时间戳
         if (lastTime == 0){
@@ -37,6 +44,7 @@ public class NewsListPresenter extends BasePresenter<lNewsListView> {
             lastTime = System.currentTimeMillis() / 1000;
         }
 
+        //getNewsList()该方法用于从今日头条的API上解析一组新闻数据
         addSubscription(mApiService.getNewsList(channelCode,lastTime,System.currentTimeMillis()/1000), new Subscriber<NewsResponse>() {
             @Override
             public void onCompleted() {
@@ -53,12 +61,13 @@ public class NewsListPresenter extends BasePresenter<lNewsListView> {
             public void onNext(NewsResponse response) {
                 lastTime = System.currentTimeMillis() / 1000;
                 PreUtils.putLong(channelCode,lastTime);//保存刷新的时间戳
-
+                //response就是解析的新闻数据
                 List<NewsData> data = response.data;
                 List<News> newsList = new ArrayList<>();
                 if (!ListUtils.isEmpty(data)){
                     for (NewsData newsData : data) {
                         News news = new Gson().fromJson(newsData.content, News.class);
+                        Log.d("TAG", news.toString());
                         newsList.add(news);
                     }
                 }
